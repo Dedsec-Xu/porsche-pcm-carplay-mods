@@ -76,3 +76,11 @@ The first bad package was disabled, the previously working native no-duck backup
 The network connection used a USB Ethernet adapter and a private LAN. Device logs identified an ASIX 88772b interface and loaded `devnp-asix.so`. A product label or hardware revision alone is insufficient to infer support. The adapter occupied the port needed for the iPhone, so network inspection and CarPlay playback testing had to be performed sequentially.
 
 No USB EEPROM/PID rewrite utility or claim that every D-Link revision is compatible is included here.
+
+## Instrument-cluster CarPlay video (2026-11-16)
+
+The owner explicitly confirmed dual-screen playback after the Porsche-specific adaptation of the Audi B9 Harman MHI2 second-screen approach. A complete session decoded 5,209 frames with zero reported decode errors. The display lifecycle was also exercised independently with synthetic video while main-screen CarPlay remained active.
+
+Unplugging exposed a separate problem: teardown began, but the expected phone-gone marker was absent when the process exited. The supervisor classified that as abnormal and made later launches fall back to original CarPlay. Its correction now also recognizes a newly logged whole-session teardown. The correction is installed and covered by tests; repeated real-phone hot-plug recovery and the interrupted teardown's root cause remain open.
+
+See [the full comparison, ABI findings, validation limits, and recovery record](CLUSTER-NAVIGATION.md). The initial complete-restart success must not be presented as proof that every warm-start or reconnect path works.

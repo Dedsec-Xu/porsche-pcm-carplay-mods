@@ -1,11 +1,12 @@
 # Reverse-engineering and modifying my Porsche PCM
 
-Notes, patch generators, and experimental code from reverse-engineering and modifying my own Porsche PCM head unit. The work covers an existing modified widescreen CarPlay installation and navigation-prompt music attenuation.
+Notes, patch generators, and experimental code from reverse-engineering and modifying my own Porsche PCM head unit. The work covers an existing modified widescreen CarPlay installation, navigation-prompt music attenuation, steering-wheel controls, and instrument-cluster CarPlay video.
 
 Target examined: **PCM 4.1 / MHI2 US POG24 P3645 / MU0935 / Bose**. This is a record of one unit, not a universal PCM firmware package.
 
 ## Changes
 
+- **Dual-screen CarPlay:** the owner confirmed instrument-cluster video working alongside the main display after a complete PCM restart with the phone connected. Target logs recorded 5,209 decoded second-stream frames with zero decode errors. A reconnect-monitor correction is installed; repeated hot-plug recovery remains unconfirmed. See the [cluster investigation and recovery record](CLUSTER-NAVIGATION.md).
 - **Widescreen CarPlay:** preserve the existing widescreen layout and reserve 50 pixels at the right edge. On the examined left-hand-drive layout, `1440 - 114 - 1276 = 50`. The effective override may be named `load.jar`, not the usual `g24cp.jar`.
 - **Navigation ducking:** a native callback bypass provided a previously user-confirmed no-attenuation baseline. The newer Java experiment exposes **Sound → Volume → CarPlay Music Level**, opening the native circular/rotary popup, with levels 1–5 and level 5 requesting no reduction.
 - **Compatibility fix:** the first audio JAR prevented CarPlay startup because one converted class had classfile version 49. The corrected version 46 loaded on the unit's J9 Foundation 1.1 VM.
