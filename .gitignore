@@ -1,0 +1,23 @@
+# Proprietary inputs, generated firmware derivatives, and device captures
+P3645-*
+load-from-pcm.jar
+hmi-java/
+jxe2jar/
+*.jar
+*.jxe
+*.class
+*.zip
+*.gz
+*.log
+*.local.*
+sound-control/src/pcm/PromptRotaryPopup.java
+**/classes/
+**/test-classes/
+**/__pycache__/
+.env*
+stock-*
+current-*
+backup-check-*
+jar-stage-*
+jar-installed-*
+native-installed-*
