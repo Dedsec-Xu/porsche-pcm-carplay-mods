@@ -25,7 +25,7 @@ An `ok` acknowledging a progress message is not counted as a successful end-to-e
 
 See [findings](FINDINGS.md), [build and deployment](BUILD.md), and [widescreen details](widescreen/README.md).
 
-The follow-up [programmable steering-wheel key work](STEERING-WHEEL.md) adds the missing CarPlay subscription using the existing track-skip backend. The owner confirmed that short-press track skipping works. A double-click-to-previous enhancement has since been installed and readback-verified; its physical-button test is pending.
+The follow-up [programmable steering-wheel key work](STEERING-WHEEL.md) adds the missing CarPlay subscription using the existing track-skip backend. The owner confirmed both short-press track skipping and the subsequent double-click-to-previous enhancement in the car. A single click advances after a 300 ms recognition window; a double click goes back.
 
 ## Contents and provenance
 

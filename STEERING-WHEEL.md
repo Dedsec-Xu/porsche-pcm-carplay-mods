@@ -72,4 +72,5 @@ For the next-track assignment, a short click sends next after a 300 ms recogniti
 - Installed/readback-verified SHA-256: `47d65f0816cd378513ae8a4c9427a09b95c5bc603113b8cfdbc087be808bc1b3`.
 - The confirmed single-click package is preserved as `pcm-prompt-level.jar.before-double-click`.
 - `deploy.py install-double` requires the exact confirmed single-click artifact; `rollback-double` restores it. Reboot is required after either action.
-- Reboot requested; physical double-click behavior remains pending owner confirmation.
+- After reboot, the inspected startup log showed no exception. The owner then tested the double-click enhancement in the car and explicitly confirmed that it works.
+- Confirmed scope: the original short-press track-skipping fix and the subsequent double-click-to-previous use case. The broader call/navigation/disconnect/long-press matrix has not been individually confirmed by the owner.
