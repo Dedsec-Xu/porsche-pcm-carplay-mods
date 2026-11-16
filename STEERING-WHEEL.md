@@ -2,7 +2,7 @@
 
 ## Reported behavior
 
-On the examined P3645 unit, the steering-wheel programmable key is assigned to track skipping in PCM but does not skip CarPlay tracks. The implementation below was subsequently installed at the owner's request. Playback validation is pending.
+On the examined P3645 unit, the steering-wheel programmable key was assigned to track skipping in PCM but did not skip CarPlay tracks. After installing the bridge, the owner explicitly confirmed that the issue was resolved. A subsequent double-click enhancement is documented below separately.
 
 ## Static findings
 
@@ -48,7 +48,7 @@ The handler captures assignment/session at press, sends at most one operation on
 - Installed package SHA-256: `7653fff2e6871b722284380cd5447447e139056a55eed1a646862c3fdf326855`.
 - Installed under `/mnt/app/eso/hmi/lsd/jars/pcm-prompt-level.jar`; readback matched before reboot.
 - Previous audio-only package retained as `pcm-prompt-level.jar.before-joker`.
-- Reboot was requested. The owner unplugged the network adapter to reconnect the iPhone before post-reboot logs could be inspected. Startup and physical-button playback results are therefore not yet confirmed.
+- Reboot was requested. The owner unplugged the network adapter to reconnect the iPhone before post-reboot logs could be inspected, then confirmed that the track-skipping issue was resolved. This confirms the original short-press use case, not every edge case in the test matrix.
 
 Build with `steering-wheel/build.ps1`, using the same Java/ASM environment as the audio build and a locally supplied verified baseline JAR. `steering-wheel/deploy.py install` requires the exact recorded audio baseline and refuses an existing recovery backup. `rollback` restores only the prior audio JAR; it leaves the native audio binary unchanged. Both require a subsequent reboot. Generated packages, readbacks, and credentials remain excluded from Git.
 
@@ -59,4 +59,17 @@ Build with `steering-wheel/build.ps1`, using the same Java/ASM environment as th
 - Test next and previous, short versus long press, non-skip assignments, CarPlay disconnect, native radio/media playback, navigation prompts, and calls.
 - Verify one action per press and no native-media side effect while CarPlay owns playback.
 
-Static analysis establishes the missing subscription and the available backend. It does not yet prove that this is the only runtime condition affecting the user's button, or that the installed patch works during actual playback.
+The owner confirmed the original short-press fix during actual use. The additional scenarios above still need individual validation.
+
+## Double-click enhancement
+
+For the next-track assignment, a short click sends next after a 300 ms recognition window. A second press within that window followed by release sends previous directly, without first sending next. The previous-track assignment remains previous. Long press cancels pending clicks and preserves the original long-press action. A third click begins a new gesture.
+
+`ClickGate` is a time-driven state machine tested independently of HMI services. Tests cover single/double clicks, a held second press canceled as a long press, repeated down/up events, stale timer callbacks, the exact 300 ms boundary, triple clicks, and cancellation. The bridge cancels pending actions on eligibility loss and rechecks session/assignment/audio state at dispatch.
+
+- Combined package: 19 classes / 317 methods passed ASM verification.
+- New/changed classes passed target J9 `-verify` preflight, including both anonymous listeners.
+- Installed/readback-verified SHA-256: `47d65f0816cd378513ae8a4c9427a09b95c5bc603113b8cfdbc087be808bc1b3`.
+- The confirmed single-click package is preserved as `pcm-prompt-level.jar.before-double-click`.
+- `deploy.py install-double` requires the exact confirmed single-click artifact; `rollback-double` restores it. Reboot is required after either action.
+- Reboot requested; physical double-click behavior remains pending owner confirmation.

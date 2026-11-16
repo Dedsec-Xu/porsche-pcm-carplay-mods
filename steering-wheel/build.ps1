@@ -9,8 +9,13 @@ if ((Get-FileHash $baseline).Hash.ToLower() -ne 'e0826c15189b46d8493567c3360bbd9
 $classes = Join-Path $PSScriptRoot 'classes'
 $tests = Join-Path $PSScriptRoot 'test-classes'
 New-Item -ItemType Directory -Force $classes, $tests | Out-Null
-& "$jdk/javac.exe" -source 1.3 -target 1.2 -cp $stock -d $classes (Join-Path $PSScriptRoot 'src/pcm/JokerBridge.java')
+$sources = (Get-ChildItem (Join-Path $PSScriptRoot 'src/pcm') -Filter '*.java').FullName
+& "$jdk/javac.exe" -source 1.3 -target 1.2 -cp $stock -d $classes $sources
 if ($LASTEXITCODE) { throw 'Bridge compilation failed' }
+& "$jdk/javac.exe" -cp $classes -d $tests (Join-Path $PSScriptRoot 'test/ClickGateTest.java')
+if ($LASTEXITCODE) { throw 'Test compilation failed' }
+& "$jdk/java.exe" -cp "$tests;$classes" ClickGateTest
+if ($LASTEXITCODE) { throw 'Click tests failed' }
 & "$jdk/javac.exe" -cp $env:ASM_CP -d $tests (Join-Path $PSScriptRoot 'PatchJoker.java') (Join-Path $repo 'sound-control/VerifyPatch.java')
 if ($LASTEXITCODE) { throw 'Tool compilation failed' }
 $outputJar = Join-Path $PSScriptRoot 'pcm-audio-joker.jar'

@@ -14,6 +14,9 @@ folder = Path(__file__).parent
 remote = '/mnt/app/eso/hmi/lsd/jars/pcm-prompt-level.jar'
 backup = remote + '.before-joker'
 expected = 'e0826c15189b46d8493567c3360bbd9785c28e93b614fa8e94a7e08c451afff6'
+if sys.argv[1:] in (['install-double'], ['rollback-double']):
+    backup = remote + '.before-double-click'
+    expected = '7653fff2e6871b722284380cd5447447e139056a55eed1a646862c3fdf326855'
 c = MinimalTelnet(HOST, PORT)
 c.read_until(b'login:'); c.send_line(USER)
 c.read_until(b'Password:'); c.send_line(PASSWORD); c.read_until(b'#')
@@ -40,6 +43,8 @@ def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 
 try:
     action = sys.argv[1:]
+    if action == ['install-double']: action = ['install']
+    if action == ['rollback-double']: action = ['rollback']
     if action == ['install']:
         stamp = str(time.time_ns())
         current = folder / ('current-' + stamp + '.local.jar')
@@ -60,16 +65,16 @@ try:
         ftp(['put ' + remote + ' steering-wheel/' + installed.name])
         if sha(installed) != sha(candidate): raise RuntimeError('Installed readback mismatch; rollback required')
         print('Installed and readback verified: ' + sha(candidate))
-        print('Previous audio-only JAR preserved at ' + backup)
+        print('Previous working JAR preserved at ' + backup)
     elif action == ['rollback']:
         command('test -f ' + backup)
         command('mount -uw /mnt/app')
         command('cp -p ' + backup + ' ' + remote + '.restore-joker')
         command('mv ' + remote + '.restore-joker ' + remote)
         command('sync')
-        print('Restored previous audio-only JAR')
+        print('Restored previous working JAR')
     else:
-        raise SystemExit('Usage: deploy.py install|rollback')
+        raise SystemExit('Usage: deploy.py install|rollback|install-double|rollback-double')
     print('Reboot required')
 finally:
     c.send_line('exit'); c.sock.close()

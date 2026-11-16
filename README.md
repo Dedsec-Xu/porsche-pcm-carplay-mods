@@ -25,7 +25,7 @@ An `ok` acknowledging a progress message is not counted as a successful end-to-e
 
 See [findings](FINDINGS.md), [build and deployment](BUILD.md), and [widescreen details](widescreen/README.md).
 
-The follow-up [programmable steering-wheel key work](STEERING-WHEEL.md) adds the missing CarPlay subscription using the existing track-skip backend. The combined patch has been installed and readback-verified; post-reboot playback testing is pending.
+The follow-up [programmable steering-wheel key work](STEERING-WHEEL.md) adds the missing CarPlay subscription using the existing track-skip backend. The owner confirmed that short-press track skipping works. A double-click-to-previous enhancement has since been installed and readback-verified; its physical-button test is pending.
 
 ## Contents and provenance
 
