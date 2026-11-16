@@ -25,6 +25,8 @@ An `ok` acknowledging a progress message is not counted as a successful end-to-e
 
 See [findings](FINDINGS.md), [build and deployment](BUILD.md), and [widescreen details](widescreen/README.md).
 
+The follow-up [programmable steering-wheel key investigation](STEERING-WHEEL.md) identifies a missing CarPlay subscription and the existing track-skip backend. That fix has not yet been installed.
+
 ## Contents and provenance
 
 Only patch logic, locally written support code, and curated findings are published. OEM JARs, JXE files, full decompilations, generated firmware derivatives, credentials, and device log archives are excluded. Supply your own matching inputs locally.
